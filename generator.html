@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>VoiceDesires – Story Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: sans-serif; background: #111; color: #fff; padding: 2rem; }
+    input, select, textarea, button {
+      display: block; width: 100%; margin: 1rem 0; padding: 0.5rem;
+      border-radius: 5px; border: none; font-size: 1rem;
+    }
+    button { background-color: #f764a7; color: white; font-weight: bold; cursor: pointer; }
+    label { margin-top: 1.5rem; font-weight: bold; }
+    .output { margin-top: 2rem; white-space: pre-wrap; background: #222; padding: 1rem; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <h1>VoiceDesires: Deine Fantasie als Geschichte</h1>
+  <form id="storyForm">
+    <label for="fantasy">Stichworte / Fantasie</label>
+    <textarea id="fantasy" rows="3" required></textarea>
+
+    <label for="tone">Tonfall</label>
+    <select id="tone">
+      <option value="romantisch">Romantisch</option>
+      <option value="verspielt">Verspielt</option>
+      <option value="heiß">Heiß</option>
+      <option value="dominant">Dominant</option>
+    </select>
+
+    <label for="perspective">Perspektive</label>
+    <select id="perspective">
+      <option value="du">Du</option>
+      <option value="ich">Ich</option>
+      <option value="er/sie">Er/Sie</option>
+    </select>
+
+    <label for="length">Länge</label>
+    <select id="length">
+      <option value="kurz">Kurz (3–4 Min)</option>
+      <option value="mittel">Mittel (6–8 Min)</option>
+      <option value="lang">Lang (10–12 Min)</option>
+    </select>
+
+    <button type="submit">Geschichte generieren</button>
+  </form>
+
+  <div class="output" id="storyOutput">Die Geschichte erscheint hier...</div>
+
+  <script>
+    document.getElementById('storyForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const fantasy = document.getElementById('fantasy').value;
+      const tone = document.getElementById('tone').value;
+      const perspective = document.getElementById('perspective').value;
+      const length = document.getElementById('length').value;
+
+      const prompt = `Schreibe eine erotische Geschichte in der ${perspective}-Perspektive mit dem Tonfall "${tone}". Die Fantasie basiert auf folgenden Stichworten: ${fantasy}. Die Geschichte soll ${length} sein.`;
+
+      const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer YOUR_API_KEY_HERE"
+        },
+        body: JSON.stringify({
+          model: "gpt-4",
+          messages: [{ role: "user", content: prompt }],
+          temperature: 0.9
+        })
+      });
+
+      const data = await response.json();
+      const story = data.choices?.[0]?.message?.content || "Fehler beim Abrufen der Geschichte.";
+      document.getElementById('storyOutput').textContent = story;
+    });
+  </script>
+</body>
+</html>
