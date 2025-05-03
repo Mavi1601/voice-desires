@@ -12,7 +12,7 @@ exports.handler = async function(event, context) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": "Bearer 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"
+        "Authorization": "Bearer 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"
       },
       body: JSON.stringify({
         model: "gpt-4",
