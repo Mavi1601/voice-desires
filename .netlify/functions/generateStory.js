@@ -1,4 +1,4 @@
-const fetch = require("node-fetch");
+const fetch = require('node-fetch');
 
 exports.handler = async function(event, context) {
   if (event.httpMethod !== "POST") {
@@ -14,7 +14,7 @@ exports.handler = async function(event, context) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": "Bearer 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"
+        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
       },
       body: JSON.stringify({
         model: "gpt-4",
